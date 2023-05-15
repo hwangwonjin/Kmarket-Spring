@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.MyDAO">
+    <!--공통nav-->
+    <select id="selectCountOrder" resultType="int">
+        SELECT COUNT(`prodNo`) AS ordercount FROM `km_product_order_item` WHERE `uid`=#{uid} AND (`ordStatus`=2 OR `ordStatus`=1);
+    </select>
+    <select id="selectCountCoupon" resultType="int">
+        SELECT COUNT(`couponNo`) FROM `km_member_coupon` WHERE `uid`=#{uid} AND `status`='사용가능';
+    </select>
+    <select id="selectSumPoint" resultType="Integer">
+        SELECT SUM(`point`) FROM `km_member_point` WHERE `expireDate` > NOW() AND `uid`=#{uid};
+    </select>
+
+    <select id="selectCountCs" resultType="int">
+        SELECT COUNT(`csNo`) FROM `km_cs` WHERE `comment` IS NULL AND `uid`=#{uid};
+    </select>
+
+    <!--home-->
+    <insert id="insertPoint">
+        insert into `km_member_point` set
+            `uid`=#{uid},
+            `ordNo`=#{ordNo},
+            `point`=#{point},
+            `pointDate`=NOW(),
+            `pointdes`=#{pointdes},
+            `expireDate`=DATE_ADD(NOW(), INTERVAL 2 YEAR);
+    </insert>
+    <select id="selectUserType" resultType="String">
+        select `sellerorgeneral` from `km_member_uid` where `uid`=#{uid};
+    </select>
+    <select id="selectPoints" resultType="kr.co.kmarket.vo.MyPointVO">
+        select * from `km_member_point` where `uid`=#{uid} order by `pointDate` desc limit 5;
+    </select>
+    <select id="selectReviews" resultType="kr.co.kmarket.vo.MyReviewVO">
+        SELECT a.*, b.prodName from `km_product_review` AS a JOIN `km_product` AS b ON a.prodNo=b.prodNo where `uid`=#{uid} order by `rdate` desc limit 5;
+    </select>
+    <select id="selectOrders" resultType="kr.co.kmarket.vo.MyOrderVO">
+        SELECT a.*, b.*, c.prodName, c.company, c.thumb1, c.cate1, c.cate2
+        FROM `km_product_order` AS a
+        JOIN `km_product_order_item` AS b
+        ON a.ordNo=b.ordNo
+        JOIN `km_product` AS c
+        ON b.prodNo=c.prodNo
+        WHERE a.uid='ghdrl123'
+        GROUP BY a.`ordNo`
+        ORDER BY a.`ordDate` DESC, b.`itemNo` ASC LIMIT 5;
+    </select>
+    <select id="selectCs" resultType="kr.co.kmarket.vo.MyCsVO">
+        select * from `km_cs` where `uid`=#{uid} order by `rdate` desc limit 5;
+    </select>
+    <select id="selectUser" resultType="kr.co.kmarket.vo.MemberVO">
+        select * from `km_member_general` where `uid`=#{uid};
+    </select>
+    <select id="selectSeller" resultType="kr.co.kmarket.vo.SellerVO">
+        select * from `km_member_seller` where `uid`=#{uid};
+    </select>
+    <update id="updateOrdStatus">
+        UPDATE `km_product_order_item` SET `ordStatus`=3, `ordState`='구매확정' WHERE `prodNo`=#{prodNo} AND `ordNo`=#{ordNo};
+    </update>
+
+    <!--point-->
+    <!-- 게시글 리스트 조회-->
+    <select id="selectPointListByPaging" resultType="kr.co.kmarket.vo.MyPointVO">
+        select * from `km_member_point` where `uid`=#{uid} order by `pointDate` desc limit #{start}, 10;
+    </select>
+    <!--게시글 수 카운팅-->
+    <select id="selectPointListCount" resultType="int">
+        select count(`pointNo`) from `km_member_point` where `uid`=#{uid};
+    </select>
+
+    <!-- home - 최근 주문 내역 - 상품명 선택 시 팝업 창 판매자 정보 출력 -->
+    <!-- select * from `km_member_seller` where `uid`=(select `seller` from `km_product` where `prodNo`=#{prodNo}); -->
+    <select id="selectCompany" resultType="kr.co.kmarket.vo.SellerVO">
+        SELECT * FROM `km_member_seller` WHERE `company`=#{company};
+    </select>
+
+
+
+    <!-- coupon -->
+    <select id="selectMyCoupons" resultType="kr.co.kmarket.vo.MyCouponVO">
+        SELECT * FROM `km_member_coupon` AS a
+            JOIN `km_coupon` AS b
+            ON a.`couponNo` = b.`couponNo` WHERE `uid`=#{uid};
+    </select>
+
+    <select id="selectCountMyCoupons" resultType="int">
+        SELECT COUNT(`no`) FROM `km_member_coupon` WHERE `uid`=#{uid};
+    </select>
+
+
+    <!-- qna -->
+    <select id="selectQnas" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT * FROM `km_cs`
+            WHERE `cate1`='qna' AND `uid`=#{uid}
+            ORDER BY `csNo` DESC
+            LIMIT #{start}, 10;
+    </select>
+
+    <select id="selectCountQnas" resultType="int">
+        SELECT COUNT(`csNo`) FROM `km_cs` WHERE `cate1`='qna' AND `uid`=#{uid};
+    </select>
+
+    <!-- home - 최근 주문 내역 - 주문번호 선택 시 팝업 창 주문상세 정보 출력 -->
+    <select id="selectOrderDetails" resultType="kr.co.kmarket.vo.MyOrderVO">
+        select a.ordDate, a.ordNo, a.ordPrice, a.ordCount, a.ordDiscount, a.ordTotPrice, a.recipName, a.recipHp, a.recipZip, a.recipAddr1, a.recipAddr2,
+        b.ordState, b.prodNo,
+        c.cate1, c.cate2, c.prodName, c.company, c.thumb1, c.price
+        from `km_product_order` as a
+        join `km_product_order_item` as b on a.ordNo = b.ordNo
+        join `km_product` as c on c.prodNo = b.prodNo
+        where a.ordNo=#{ordNo};
+    </select>
+
+    <!-- home - 최근 주문 내역 - 상품명 선택 - 팝업 창 - 문의하기 -->
+    <insert id="insertQnaToSeller" >
+        insert into `km_cs` set
+        `uid`=#{uid},
+        `cate1`='판매자게시판',
+        `cate2`='toSeller',
+        `type`=#{type},
+        `email`=#{email},
+        `title`=#{title},
+        `content`=#{content},
+        `regip`=#{regip},
+        `rdate`=NOW();
+    </insert>
+
+    <!-- home 상품평 작성하기 -->
+    <insert id="insertReview">
+        insert into `km_product_review` set
+        `prodNo`=#{prodNo},
+        `uid`=#{uid},
+        `content`=#{content},
+        `prodName`=#{prodName},
+        `rating`=#{rating},
+        `regip`=#{regip},
+        `rdate`=NOW();
+    </insert>
+
+
+    <!--info-->
+    <update id="updateSellerHp">
+        update `km_member_seller` set `hp`=#{hp} where `uid`=#{uid};
+    </update>
+    <update id="updateUserHp">
+        update `km_member_general` set `hp`=#{hp} where `uid`=#{uid};
+    </update>
+    <update id="updateSellerEmail">
+        update `km_member_seller` set `email`=#{email} where `uid`=#{uid};
+    </update>
+    <update id="updateUserEmail">
+        update `km_member_general` set `email`=#{email} where `uid`=#{uid};
+    </update>
+    <update id="updateSellerInfo">
+        update `km_member_seller` set `hp`=#{hp}, `email`=#{email}, `zip`=#{zip}, `addr1`=#{addr1}, `addr2`=#{addr2} where `uid`=#{uid};
+    </update>
+    <update id="updateUserInfo">
+        update `km_member_general` set `hp`=#{hp}, `email`=#{email}, `zip`=#{zip}, `addr1`=#{addr1}, `addr2`=#{addr2} where `uid`=#{uid};
+    </update>
+</mapper>

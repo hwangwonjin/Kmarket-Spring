@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<th:block th:replace="~{_header}"/>
+
+
+            <section>
+                <!-- 슬라이더 영역 -->
+                <section class="slider">
+                    <div class="bx-wrapper" style="max-width: 100%;">
+                        <div class="bx-viewport" aria-live="polite" style="width: 100%; overflow: hidden; position: relative; height: 447px;">
+                            <ul style="width: 5215%; position: relative; transition-timing-function: linear; transition-duration: 0s; transform: translate3d(-985px, 0px, 0px);">
+                                <li style="float: left; list-style: none; position: relative; width: 985px;" class="bx-clone" aria-hidden="true">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item5.jpg}" alt="item5">
+                                    </a>
+                                </li>
+                                <li style="float: left; list-style: none; position: relative; width: 985px;" aria-hidden="false">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item1.jpg}" alt="item1">
+                                    </a>
+                                </li>
+                                <li aria-hidden="true" style="float: left; list-style: none; position: relative; width: 985px;">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item2.jpg}" alt="item2">
+                                    </a>
+                                </li>
+                                <li aria-hidden="true" style="float: left; list-style: none; position: relative; width: 985px;">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item3.jpg}" alt="item3">
+                                    </a>
+                                </li>
+                                <li aria-hidden="true" style="float: left; list-style: none; position: relative; width: 985px;">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item4.jpg}" alt="item4">
+                                    </a>
+                                </li>
+                                <li style="float: left; list-style: none; position: relative; width: 985px;" aria-hidden="true">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item5.jpg}" alt="item5">
+                                    </a>
+                                </li>
+                                <li style="float: left; list-style: none; position: relative; width: 985px;" class="bx-clone" aria-hidden="true">
+                                    <a href="#">
+                                        <img th:src="@{/img/slider_item1.jpg}" alt="item1">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bx-controls bx-has-controls-direction bx-has-pager">
+                            <div class="bx-controls-direction">
+                                <a class="bx-prev" href>Prev</a>
+                                <a class="bx-next" href>Next</a>
+                            </div>
+                            <div class="bx-pager bx-default-pager">
+                                <div class="bx-pager-item">
+                                    <a href data-slide-index="0" class="bx-pager-link active">1</a>
+                                </div>
+                                <div class="bx-pager-item">
+                                    <a href data-slide-index="1" class="bx-pager-link">2</a>
+                                </div>
+                                <div class="bx-pager-item">
+                                    <a href data-slide-index="2" class="bx-pager-link">3</a>
+                                </div>
+                                <div class="bx-pager-item">
+                                    <a href data-slide-index="3" class="bx-pager-link">4</a>
+                                </div>
+                                <div class="bx-pager-item">
+                                    <a href data-slide-index="4" class="bx-pager-link">5</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- 히트상품 영역 -->
+                <section class="hit">
+                    <h3><span>히트상품</span></h3>
+                    <article th:each="hit, i:${index.hit}">
+                        <a th:href="@{/product/view (cate1=${hit.cate1}, cate2=${hit.cate2}, prodNo=${hit.prodNo})}">
+                            <div class="thumb">
+                                <img th:src="@{/thumb/{cate1}/{cate2}/{thumb1} (cate1=${hit.cate1}, cate2=${hit.cate2}, thumb1=${hit.thumb1})}" alt="t1">
+                            </div>
+                            <h2>[[${hit.prodName}]]</h2>
+                            <p>[[${hit.descript}]]</p>
+                            <div class="org_price">
+                                <del th:text="${#numbers.formatInteger(hit.price, 0, 'COMMA')}">36,000</del>
+                                <span>[[${hit.discount + "%"}]]</span>
+                            </div>
+                            <div class="dis_price">
+                                <ins th:text="${#numbers.formatInteger(hit.sellPrice, 0, 'COMMA')}">30,000</ins>
+                                <span class="free">무료배송</span>
+                            </div>
+                        </a>
+                    </article>
+                </section>
+                <!-- 추천상품 영역 -->
+                <section class="recommend">
+                    <h3><span>추천상품</span></h3>
+                    <article th:each="score:${index.score}">
+                        <a th:href="@{/product/view (cate1=${score.cate1}, cate2=${score.cate2}, prodNo=${score.prodNo})}">
+                            <div class="thumb">
+                                <img th:src="@{/thumb/{cate1}/{cate2}/{thumb1} (cate1=${score.cate1}, cate2=${score.cate2}, thumb1=${score.thumb1})}" alt="t1">
+                            </div>
+                            <h2>[[${score.prodName}]]</h2>
+                            <p>[[${score.descript}]]</p>
+                            <div class="org_price">
+                                <del th:text="${#numbers.formatInteger(score.price, 0, 'COMMA')}">36,000</del>
+                                <span>[[${score.discount + "%"}]]</span>
+                            </div>
+                            <div class="dis_price">
+                                <ins th:text="${#numbers.formatInteger(score.sellPrice, 0, 'COMMA')}">20,000</ins>
+                                <span>[[${score.delivery}]]</span>
+                            </div>
+                        </a>
+                    </article>
+                </section>
+                <!-- 최신상품 영역 -->
+                <section class="new">
+                    <h3><span>최신상품</span></h3>
+                    <article th:each="newProd:${index.new}">
+                        <a th:href="@{/product/view (cate1=${newProd.cate1}, cate2=${newProd.cate2}, prodNo=${newProd.prodNo})}">
+                            <div class="thumb">
+                                <img th:src="@{/thumb/{cate1}/{cate2}/{thumb1} (cate1=${newProd.cate1}, cate2=${newProd.cate2}, thumb1=${newProd.thumb1})}" alt="t1">
+                            </div>
+                            <h2>[[${newProd.prodName}]]</h2>
+                            <p>[[${newProd.descript}]]</p>
+                            <div class="org_price">
+                                <del th:text="${#numbers.formatInteger(newProd.price, 0, 'COMMA')}">36,000</del>
+                                <span>[[${newProd.discount + "%"}]]</span>
+                            </div>
+                            <div class="dis_price">
+                                <ins th:text="${#numbers.formatInteger(newProd.sellPrice, 0, 'COMMA')}">20,000</ins>
+                                <span class="free">무료배송</span>
+                            </div>
+                        </a>
+                    </article>
+                </section>
+                <!-- 할인상품 영역 -->
+                <section class="discount">
+                    <h3><span>할인상품</span></h3>
+                    <article th:each="discount:${index.discount}">
+                        <a th:href="@{/product/view (cate1=${discount.cate1}, cate2=${discount.cate2}, prodNo=${discount.prodNo})}">
+                            <div class="thumb">
+                                <img th:src="@{/thumb/{cate1}/{cate2}/{thumb1} (cate1=${discount.cate1}, cate2=${discount.cate2}, thumb1=${discount.thumb1})}" alt="t1">
+                            </div>
+                            <h2>[[${discount.prodName}]]</h2>
+                            <p>[[${discount.descript}]]</p>
+                            <div class="org_price">
+                                <del th:text="${#numbers.formatInteger(discount.price, 0, 'COMMA')}">36,000</del>
+                                <span>[[${discount.discount + "%"}]]</span>
+                            </div>
+                            <div class="dis_price">
+                                <ins th:text="${#numbers.formatInteger(discount.sellPrice, 0, 'COMMA')}">20,000</ins>
+                                <span class="free">무료배송</span>
+                            </div>
+                        </a>
+                    </article>
+                </section>
+            </section>
+        </main>
+<th:block th:replace="~{_footer}"/>
+</html>

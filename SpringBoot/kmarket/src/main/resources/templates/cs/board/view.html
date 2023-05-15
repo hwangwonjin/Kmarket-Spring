@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{cs/_header}"/>
+<th:block th:replace="~{cs/board/__${cate1}__}"/>
+              <article class="viewTitle">
+              <th:block th:switch="${#strings.toString(cate1)}">
+                <th:block th:case="_notice">
+                  <nav>
+                    <h2 class="title">[[${art.title}]]</h2>
+                    <span class="date">[[${art.rdate}]]</span>
+                  </nav>
+                </th:block>
+                <th:block th:case="_faq">
+                  <nav>
+                    <h2 class="title"><span>Q.</span>[[${art.title}]]</a></h2>
+                  </nav>
+                </th:block>
+                <th:block th:case="_qna">
+                  <nav>
+                    <h2 class="title">[[${art.title}]]</h2>
+                    <p>
+                      <span>[[${art.uidMasking}]]</span>
+                      <span>[[${art.rdate}]]</span>
+                    </p>
+                  </nav>
+                </th:block>
+              </th:block>
+
+              <div class="content">
+                <p>
+                  [[${art.content}]]
+                </p>
+                <p>
+                  ※ 피싱 관련 피해신고<br /><br />
+                  ▶ 경찰청 사이버수사국 (국번없이)182 :
+                  http://cyberbureau.police.go.kr<br />
+                  ▶ KISA 인터넷침해대응센터 (국번없이)118 :
+                  http://www.krcert.or.kr<br />
+                  감사합니다.<br />
+                </p>
+              </div>
+              <a th:href="@{/cs/list(cate1=${oriCate1}, cate2=${cate2}, pg=${pg})}" class="btnList">목록보기</a>
+            </article>
+          </section>
+        </div>
+      </section>
+<th:block th:replace="~{cs/_footer}"/>
+</html>

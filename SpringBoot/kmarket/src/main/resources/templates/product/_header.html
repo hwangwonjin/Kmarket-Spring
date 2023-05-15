@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>Kmarket::product-list</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+  <script th:src="@{/js/view.js}"></script>
+  <script th:src="@{/js/cart.js}"></script>
+  <script th:src="@{/js/order.js}"></script>
+  <script th:src="@{/js/zipcode.js}"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/product.css}">
+  <!--
+      날짜 : 2023/02/07
+      이름 : 이원정
+      내용 : Kmarket product list 화면 구현
+  -->
+</head>
+<body>
+<div id="wrapper">
+  <header>
+    <div class="top">
+      <div sec:authorize="isAuthenticated()">
+        <a th:href="@{/member/logout}">로그아웃</a>
+        <a th:href="@{/member/join}">회원가입</a>
+        <a th:href="@{/my/home}">마이페이지</a>
+        <a th:href="@{/product/cart}">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          장바구니
+        </a>
+      </div>
+      <div sec:authorize="isAnonymous()">
+        <a th:href="@{/member/login}">로그인</a>
+        <a th:href="@{/member/join}">회원가입</a>
+
+      </div>
+    </div>
+    <div class="logo">
+      <div>
+        <a th:href="@{/}">
+          <img th:src="@{/img/header_logo.png}" alt="헤더로고">
+        </a>
+        <form th:action="@{/product/search}">
+          <input type="text" name="keyword">
+          <button>
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="menu">
+      <div>
+        <ul>
+          <li><a href="#">히트상품</a></li>
+          <li><a href="#">추천상품</a></li>
+          <li><a href="#">최신상품</a></li>
+          <li><a href="#">인기상품</a></li>
+          <li><a href="#">할인상품</a></li>
+        </ul>
+        <ul>
+          <li><a href="#">쿠폰존</a></li>
+          <li><a href="#">사용후기</a></li>
+          <li><a href="#">개인결제</a></li>
+          <li><a href="#">고객센터</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <main id="product">
+    <aside>
+      <ul class="category">
+        <li>
+          <i class="fa fa-bars" aria-hidden="true"></i>
+          카테고리
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+            브랜드패션
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="brand:${cate.get('10')}">
+              <a th:href="@{/product/list (cate1=${brand.cate1}, cate2=${brand.cate2}, sort='sold')}">[[${brand.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-tshirt" aria-hidden="true"></i>
+            패션·의류·뷰티
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="fashion:${cate.get('11')}">
+              <a th:href="@{/product/list (cate1=${fashion.cate1}, cate2=${fashion.cate2}, sort='sold')}">[[${fashion.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-baby-carriage" aria-hidden="true"></i>
+            유아동
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="baby:${cate.get('12')}">
+              <a th:href="@{/product/list (cate1=${baby.cate1}, cate2=${baby.cate2}, sort='sold')}">[[${baby.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-utensils" aria-hidden="true"></i>
+            식품·생필품
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="utensils:${cate.get('13')}">
+              <a th:href="@{/product/list (cate1=${utensils.cate1}, cate2=${utensils.cate2}, sort='sold')}">[[${utensils.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-home" aria-hidden="true"></i>
+            홈데코·문구·취미·반려
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="home:${cate.get('14')}">
+              <a th:href="@{/product/list (cate1=${home.cate1}, cate2=${home.cate2}, sort='sold')}">[[${home.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-tv" aria-hidden="true"></i>
+            컴퓨터·디지털·가전
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="tv:${cate.get('15')}">
+              <a th:href="@{/product/list (cate1=${tv.cate1}, cate2=${tv.cate2}, sort='sold')}">[[${tv.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-running" aria-hidden="true"></i>
+            스포츠·건강·렌탈
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="running:${cate.get('16')}">
+              <a th:href="@{/product/list (cate1=${running.cate1}, cate2=${running.cate2}, sort='sold')}">[[${running.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-car" aria-hidden="true"></i>
+            자동차·공구
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="car:${cate.get('17')}">
+              <a th:href="@{/product/list (cate1=${car.cate1}, cate2=${car.cate2}, sort='sold')}">[[${car.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-book" aria-hidden="true"></i>
+            여행·도서·티켓·e쿠폰
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <ol>
+            <li th:each="book:${cate.get('18')}">
+              <a th:href="@{/product/list (cate1=${book.cate1}, cate2=${book.cate2}, sort='sold')}">[[${book.c2Name}]]</a>
+            </li>
+          </ol>
+        </li>
+      </ul>
+    </aside>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+    날짜 : 2023/02/09
+    이름 : 이원정
+    내용 : admin fragment header 화면 구현
+
+    - th:fragment 해당 부분을 fragment 선언한다는 의미 (다른 페이지에서 해당 fragment를 가져올 수 있다)
+-->
+<th:block th:fragment="admin_header">
+    <header>
+        <div>
+            <a th:href="@{/admin/index}" class="logo">
+
+                <img th:src="@{/img/admin_logo.png}" alt="admin_logo">
+            </a>
+            <p>
+                <th:block sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/member/login}">로그인 |</a>
+                    <a th:href="@{/member/join}">회원가입 |</a>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()">
+                    <a href="#">[[${#authentication.principal.user.uid}]] 님 |</a>
+                    <a th:href="@{/}">HOME |</a>
+                    <a th:href="@{/member/logout}">로그아웃 |</a>
+                    <a th:href="@{#}">고객센터</a>
+                </th:block>
+            </p>
+        </div>
+    </header>
+</th:block>
+</html>

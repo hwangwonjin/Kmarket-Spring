@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}">
+<th:block layout:fragment="main">
+				<section id="admin-notice">
+                <nav>
+                    <h3>공지사항</h3>
+                    <p>
+                        HOME > 고객센터 >
+                        <strong>공지사항</strong>
+                    </p>
+                </nav>
+                <section>
+                    <div>
+                        <select name="cate2" id="selectBox" onchange="csSearch()">
+                            <option value="none">유형 선택</option>
+                            <option value="service">고객서비스</option>
+                            <option value="safeDeal">안전거래</option>
+                            <option value="xproduct">위해상품</option>
+                            <option value="great">이벤트당첨</option>
+                        </select>
+                    </div>
+                    <table id="tb">
+                        <tr>
+                            <th>
+                            <input type="checkbox" name="all" class="chk" onclick="selectAll(this)">
+                            </th>
+                            <th>번호</th>
+                            <th>유형</th>
+                            <th>제목</th>
+                            <th>조회</th>
+                            <th>날짜</th>
+                            <th>관리</th>
+                        </tr>
+
+                        <tr class="row" th:each="art,index:${articles}">
+                        	<td><input type="checkbox" name="check" th:value="${art.csNo}"></td>
+                            <td>[[${pageStartNum - index.index}]]</td>
+                            <td>[[${art.cate1}]]</td>
+                            <td><a th:href="@{/admin/cs/notice/view(cate2=${cate2}, pg=${pg}, csNo=${art.csNo})}" th:text="${art.title}"></a></td>
+                            <td>[[${art.hit}]]</td>
+                            <td>[[${art.rdate}]]</td>
+                            <td>
+                                <a th:href="@{/admin/cs/delete(cate1=${art.cate1}, cate2=${cate2}, pg=${pg}, csNo=${art.csNo})}" class="remove" onclick="return delConfirm();">[삭제]</a><br>
+                                <a th:href="@{/admin/cs/notice/modify(csNo=${art.csNo})}">[수정]</a>
+                            </td>
+                        </tr>
+                       
+                    </table>
+                    <input type="button" class="delete" value="선택삭제" onclick="checkDelete()">
+                    <a th:href="@{/admin/cs/notice/write}" class="write" id="write">작성하기</a>
+
+                    <div class="paging">
+                        <th:block th:if="${groups[0] > 1}">
+                            <span><a th:href="@{/admin/cs/notice/list(cate2=${cate2}, pg=${groups[0] - 1})}" class="prev"><&nbsp;이전</a></span>
+                        </th:block>
+                        <span class="num">
+                        <th:block th:each="num:${#numbers.sequence(groups[0],groups[1])}">
+                            <a th:href="@{/admin/cs/notice/list(cate2=${cate2}, pg=${num})}" th:class="${num == currentPage ? 'on' : 'off'}">[[${num}]]</a>
+                        </th:block>
+                        </span>
+                        <th:block th:if="${groups[1] < lastPage}">
+                            <span><a th:href="@{/admin/cs/notice/list(cate2=${cate2}, pg=${groups[1] + 1})}" class="next">다음&nbsp;></a></span>
+                        </th:block>
+                    </div>
+                </section>
+            </section>
+</th:block>
+</html>

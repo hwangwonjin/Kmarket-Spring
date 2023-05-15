@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.MemberDAO">
+    <insert id="insertSeller">
+        insert into `km_member_seller` set
+            `uid`=#{uid},
+            `pass`=#{pass},
+            `type`=2,
+            `point`=#{point},
+            `level`=2,
+            `zip`=#{zip},
+            `addr1`=#{addr1},
+            `addr2`=#{addr2},
+            `company`=#{company},
+            `ceo`=#{ceo},
+            `bizRegNum`=#{bizRegNum},
+            `comRegNum`=#{comRegNum},
+            `tel`=#{tel},
+            `name`=#{name},
+            `hp`=#{hp},
+            `fax`=#{fax},
+            `email`=#{email},
+            `regip`=#{regip},
+            `sellerorgeneral`='seller',
+            `rdate`=NOW();
+    </insert>
+    <insert id="insertMember">
+        insert into `km_member_general` set
+            `uid`=#{uid},
+            `pass`=#{pass},
+            `name`=#{name},
+            `gender`=#{gender},
+            `hp`=#{hp},
+            `email`=#{email},
+            `type`=1,
+            `point`=#{point},
+            `level`=1,
+            `zip`=#{zip},
+            `addr1`=#{addr1},
+            `addr2`=#{addr2},
+            `regip`=#{regip},
+            `sellerorgeneral`='general',
+            `rdate`=NOW();
+    </insert>
+    <insert id="insertUser">
+        insert into `km_member_uid` set `uid`=#{uid}, `type`=#{type}, `sellerorgeneral`=#{sellerorgeneral};
+    </insert>
+    <select id="selectTerms" resultType="kr.co.kmarket.vo.TermsVO">
+        select * from `km_member_terms`;
+    </select>
+</mapper>

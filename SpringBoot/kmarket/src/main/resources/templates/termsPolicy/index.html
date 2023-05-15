@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{termsPolicy/_header}"/>
+            <section class="buyer">
+                <nav>
+                    <h1>KMARKET 서비스 이용약관</h1>
+                    <ul>
+                        <li th:classappend="${cate}=='buyer' ? 'on'"><a th:href="@{/termsPolicy/index (cate=buyer)}">구매회원 약관</a></li>
+                        <li th:classappend="${cate}=='seller' ? 'on'"><a th:href="@{/termsPolicy/index (cate=seller)}">판매회원 약관</a></li>
+                        <li th:classappend="${cate}=='finance' ? 'on'"><a th:href="@{/termsPolicy/index (cate=finance)}">전자금융거래 약관</a></li>
+                        <li th:classappend="${cate}=='location' ? 'on'"><a th:href="@{/termsPolicy/index (cate=location)}">위치정보이용 약관</a></li>
+                        <li th:classappend="${cate}=='privacy' ? 'on'"><a th:href="@{/termsPolicy/index (cate=privacy)}">개인정보수집 방침</a></li>
+                    </ul>
+                </nav>
+                <article>
+                    <th:block th:switch="${#strings.toString(cate)}">
+                        <th:block th:if="${cate} == 'buyer'">
+                            <h2>구매회원 이용약관</h2>
+                        </th:block>
+                        <th:block th:if="${cate} == 'seller'">
+                            <h2>판매회원 이용약관</h2>
+                        </th:block>
+                        <th:block th:if="${cate} == 'finance'">
+                            <h2>전자금융거래 약관</h2>
+                        </th:block>
+                        <th:block th:if="${cate} == 'location'">
+                            <h2>위치정보이용 약관</h2>
+                        </th:block>
+                        <th:block th:if="${cate} == 'privacy'">
+                            <h2>개인정보수집 방침</h2>
+                        </th:block>
+                    </th:block>
+                    <th:block th:each="map:${sortMap}">
+                        <p>
+                        <span class="chapter">[[${map.key}]]</span><br/>
+                        <th:block th:each="art:${map.value}">
+                            <span class="tit">[[${art.tit}]]</span>
+                            <span class="content">
+                                [[${art.content}]]
+                            </span><br/><br/>
+                        </th:block>
+                        </p>
+                    </th:block>
+                </article>
+            </section>
+        </main>
+<th:block th:replace="~{/_footer}"/>
+</html>

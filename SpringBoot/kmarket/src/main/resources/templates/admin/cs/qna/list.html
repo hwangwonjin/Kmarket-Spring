@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}">
+<th:block layout:fragment="main">
+				<section id="admin-faq">
+                <nav>
+                    <h3>문의하기 목록</h3>
+                    <p>
+                        HOME > 고객센터 >
+                        <strong>문의하기</strong>
+                    </p>
+                </nav>
+                <section>
+                    <div>
+                        <select name="cate2" class="cate2" required onchange="qnaOption()">
+                            <option value="none" disabled selected>1차 선택</option>
+                            <option value="user">회원</option>
+                            <option value="coupon">쿠폰/이벤트</option>
+                            <option value="order">주문/결제</option>
+                            <option value="delivery">배송</option>
+                            <option value="cancel">취소/반품/교환</option>
+                            <option value="travel">여행/숙박/항공</option>
+                            <option value="safeDeal">안전거래</option>
+                        </select>
+                        <select name="type" class="type" onchange="csSearch()">
+                            <option value="none" disabled selected>2차 선택</option>
+                        </select>
+                    </div>
+                    <table id="tb">
+                        <tr>
+                            <th>
+                            <input type="checkbox" name="all" class="chk" onclick="selectAll(this)">
+                            </th>
+                            <th>번호</th>
+                            <th>1차 유형</th>
+                            <th>2차 유형</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>상태</th>
+                        </tr>
+                        
+                        <tr class="row" th:each="art,index:${articles}">
+                        	<td><input type="checkbox" name="check" th:value="${art.csNo}"></td>
+                            <td>[[${pageStartNum - index.index + 1}]]</td>
+                            <td>[[${art.cate2}]]</td>
+                            <td>[[${art.type}]]</td>
+                            <th:block th:if="${#strings.isEmpty(art.comment)}">
+                                <td><a th:href="@{/admin/cs/qna/reply(cate2=${cate2}, type=${type}, pg=${pg}, csNo=${art.csNo})}">[[${art.title}]]</a></td>
+                            </th:block>
+                            <th:block th:unless="${#strings.isEmpty(art.comment)}">
+                                <td><a th:href="@{/admin/cs/qna/view(cate2=${cate2}, type=${type}, pg=${pg}, csNo=${art.csNo})}">[[${art.title}]]</a></td>
+                            </th:block>
+
+                            <td>[[${art.uid}]]</td>
+                            <td>
+								[[${art.rdate}]]
+							</td>
+                            <th:block th:if="${#strings.isEmpty(art.comment)}">
+                                <td>
+                                    검토중
+                                </td>
+                            </th:block>
+                            <th:block th:unless="${#strings.isEmpty(art.comment)}">
+                                <td class="finish">
+                                    답변완료
+                                </td>
+                            </th:block>
+                        </tr>
+                       
+                    </table>
+                    <input type="button" class="delete" value="선택삭제" onclick="checkDelete()">
+
+                    <div class="paging">
+                        <th:block th:if="${groups[0] > 1}">
+                            <span><a th:href="@{/admin/cs/qna/list(cate2=${cate2}, type=${type}, pg=${groups[0] - 1})}" class="prev"><&nbsp;이전</a></span>
+                        </th:block>
+                        <span class="num">
+                        <th:block th:each="num:${#numbers.sequence(groups[0],groups[1])}">
+                            <a th:href="@{/admin/cs/qna/list(cate2=${cate2}, type=${type}, pg=${num})}" th:class="${num == currentPage ? 'on' : 'off'}">[[${num}]]</a>
+                        </th:block>
+                        </span>
+                        <th:block th:if="${groups[1] < lastPage}">
+                            <span><a th:href="@{/admin/cs/qna/list(cate2=${cate2}, type=${type}, pg=${groups[1] + 1})}" class="next">다음&nbsp;></a></span>
+                        </th:block>
+                    </div>
+                </section>
+            </section>
+</th:block>
+</html>

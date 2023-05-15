@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<th:block th:replace="~{product/_header}"/>
+        <script>
+
+
+
+        </script>
+            <section class="cart">
+                <nav>
+                    <h1>장바구니</h1>
+                    <p>
+                        HOME >
+                        <strong>장바구니</strong>
+                    </p>
+                </nav>
+               <form action="#">
+                   <input type="hidden" name="seller" th:value="${#authentication.principal.user.uid}">
+                    <table border="0">
+                        <tr>
+                            <th><input type="checkbox" id="all" name="all"></th>
+                            <th>상품명</th>
+                            <th>총수량</th>
+                            <th>판매가</th>
+                            <th>할인</th>
+                            <th>포인트</th>
+                            <th>배송비</th>
+                            <th>소계</th>
+                        </tr>
+
+                            <tr class="empty">
+                                <td colspan="7">장바구니에 상품이 없습니다.</td>
+                            </tr>
+
+
+                            <tr th:each="prod:${prod}" th:id="${prod.prodNo}">
+                                <td><input type="checkbox" th:class="${prod.prodNo}" name="prodNo" th:value="${prod.prodNo}" th:onclick="checkProd([[${prod.prodNo}]])"></td>
+                                <td><article>
+                                    <a th:href="@{/product/view (cate1=${prod.cate1}, cate2=${prod.cate2}, prodNo=${prod.prodNo})}">
+                                        <img th:src="@{/thumb/{cate1}/{cate2}/{thumb1} (cate1=${prod.cate1}, cate2=${prod.cate2}, thumb1=${prod.thumb1})}" alt="1">
+                                    </a>
+                                    <div>
+                                        <h2><a th:href="@{/product/view (cate1=${prod.cate1}, cate2=${prod.cate2}, prodNo=${prod.prodNo})}">[[${prod.prodName}]]</a></h2>
+                                        <p>[[${prod.descript}]]</p>
+                                    </div>
+                                </article></td>
+                                <td th:id="${prod.prodNo + 'count'}">[[${#numbers.formatInteger(prod.count, 0, 'COMMA')}]]</td>
+                                <td th:id="${prod.prodNo + 'price'}">[[${#numbers.formatInteger(prod.price, 0, 'COMMA')}]]</td>
+                                <td th:id="${prod.prodNo + 'discount'}">[[${#numbers.formatInteger(prod.discount, 0, 'COMMA')}]]</td>
+                                <td th:id="${prod.prodNo + 'point'}">[[${#numbers.formatInteger(prod.point, 0, 'COMMA')}]]</td>
+                                <td th:id="${prod.prodNo + 'delivery'}">[[${#numbers.formatInteger(prod.delivery, 0, 'COMMA')}]]</td>
+                                <td th:id="${prod.prodNo + 'total'}">[[${#numbers.formatInteger(prod.total, 0, 'COMMA')}]]</td>
+                            </tr>
+
+                    </table>
+                    <input type="button" name="del" class="del" value="선택삭제">
+                    <div class="total">
+                        <h2>전체합계</h2>
+                        <table>
+                            <tr>
+                                <td>상품수</td>
+                                <td class="count">0</td>
+                            </tr>
+                            <tr>
+                                <td>상품금액</td>
+                                <td class="price">0</td>
+                            </tr>
+                            <tr>
+                                <td>할인금액</td>
+                                <td class="discount">0</td>
+                            </tr>
+                            <tr>
+                                <td>배송비</td>
+                                <td class="delivery">0</td>
+                            </tr>
+                            <tr>
+                                <td>포인트</td>
+                                <td class="point">0</td>
+                            </tr>
+                            <tr>
+                                <td>전체주문금액</td>
+                                <td class="total">0</td>
+                            </tr>
+                        </table>
+                        <input type="submit" value="주문하기">
+                    </div>
+                </form>
+            </section>
+        </main>
+<th:block th:replace="~{product/_footer}"/>
+</html>

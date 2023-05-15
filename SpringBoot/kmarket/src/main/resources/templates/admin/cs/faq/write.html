@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/adminLayout}">
+<th:block layout:fragment="main">
+            <section id="cs">
+            	<div class="faq">
+	                <nav>
+	                    <h3>자주묻는질문 쓰기</h3>
+	                    <p>
+	                        HOME > 고객센터 >
+	                        <strong>자주묻는질문</strong>
+	                    </p>
+	                </nav>
+	                <section class="write">
+						<article>
+	                        <form th:action="@{/admin/cs/faq/write}" method="post">
+	                            <table>
+									<input type="hidden" name="uid" th:value="${#authentication.principal.user.uid}">
+									<input type="hidden" name="regip" th:value="${#authentication.details.remoteAddress}">
+	                                <tbody>
+	                                    <tr>
+	                                        <td>문의유형</td>
+	                                        <td>
+	                                            <select name="cate2" class="cate2" onchange="qnaOption()">
+	                                                <option value="none">1차 선택</option>
+						                            <option value="user">회원</option>
+						                            <option value="coupon">쿠폰/이벤트</option>
+						                            <option value="order">주문/결제</option>
+						                            <option value="delivery">배송</option>
+						                            <option value="cancel">취소/반품/교환</option>
+						                            <option value="travel">여행/숙박/항공</option>
+						                            <option value="safeDeal">안전거래</option>
+	                                            </select>
+												<select name="type" class="type">
+	                                                <option value="0">2차 선택</option>
+	                                            </select>
+	                                        </td>
+	                                    </tr>
+	                                    <tr>
+	                                        <td>문의제목</td>
+	                                        <td>
+	                                            <input type="text" name="title" placeholder="제목을 입력하세요.">
+	                                        </td>
+	                                    </tr>
+	                                    <tr>
+	                                        <td>문의내용</td>
+	                                        <td>
+	                                            <textarea name="content" placeholder="내용을 입력하세요."></textarea>
+	                                        </td>
+	                                    </tr>
+	                                </tbody>
+	                            </table>
+	                             <div>
+	                                <a href="#" class="btnList">취소하기</a>
+	                                <input type="submit" class="btnSubmit" value="등록하기">
+	                            </div>
+	                        </form>
+	                    </article>
+	                </section>
+                </div>
+            </section>
+</th:block>
+</html>

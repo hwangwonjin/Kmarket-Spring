@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <section id="cs">
+    <div class="notice">
+      <nav>
+        <div>
+          <p>홈<span>></span>공지사항</p>
+        </div>
+      </nav>
+      <section class="list">
+        <aside>
+          <h2>공지사항</h2>
+          <ul>
+            <li th:classappend="${cate2}=='all' ? 'on'"><a th:href="@{/cs/list(cate1=notice, cate2=all, pg=1)}">전체</a></li>
+            <li th:classappend="${cate2}=='service' ? 'on'"><a th:href="@{/cs/list(cate1=notice, cate2=service, pg=1)}">고객서비스</a></li>
+            <li th:classappend="${cate2}=='safeDeal' ? 'on'"><a th:href="@{/cs/list(cate1=notice, cate2=safeDeal, pg=1)}">안전거래</a></li>
+            <li th:classappend="${cate2}=='xproduct' ? 'on'"><a th:href="@{/cs/list(cate1=notice, cate2=xproduct, pg=1)}">위해상품</a></li>
+            <li th:classappend="${cate2}=='great' ? 'on'"><a th:href="@{/cs/list(cate1=notice, cate2=great, pg=1)}">이벤트당첨</a></li>
+          </ul>
+        </aside>
+</html>

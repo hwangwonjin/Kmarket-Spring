@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>케이마켓::관리자</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>    
+    <script src="/Kmarket/admin/js/gnb.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/admin/css/admin.css">
+        <!--
+        날짜 : 2023/02/07
+        이름 : 황원진
+        내용 : admin faq list 화면구현
+        -->
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <div>
+                <a href="#" class="logo">
+                    <img src="/admin/img/admin_logo.png" alt="admin_logo">
+                </a>
+                <p>
+					<span>홍길동님 반갑습니다.</span>
+					<a href="#">HOME |</a>
+					<a href="#">  로그아웃  |</a>
+					<a href="#">고객센터</a>
+                </p>
+            </div>
+        </header>
+        <main>
+            <aside>
+                 <!-- Global Navigation Bar -->
+                <ul id="gnb">
+                    <li>
+                        <a href="#"><i class="fa fa-cogs" aria-hidden="true"></i>환경설정</a>
+                        <ol>
+                            <li><a href="#">기본환경설정</a></li>
+                            <li><a href="#">배너관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-store" aria-hidden="true"></i>상점관리</a>
+                        <ol>
+                            <li><a href="#">판매자현황</a></li>
+                            <li><a href="#">재고관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-users" aria-hidden="true"></i>회원관리</a>
+                        <ol>
+                            <li><a href="#">회원현황</a></li>
+                            <li><a href="#">포인트관리</a></li>
+                            <li><a href="#">비회원관리</a></li>
+                            <li><a href="#">접속자집계</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-box-open" aria-hidden="true"></i>상품관리</a>
+                        <ol>
+                            <li><a href="#">상품현황</a></li>
+                            <li><a href="#">상품등록</a></li>
+                            <li><a href="#">재고관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>주문관리</a>
+                        <ol>
+                            <li><a href="#">주문현황</a></li>
+                            <li><a href="#">매출현황</a></li>
+                            <li><a href="#">결제관리</a></li>
+                            <li><a href="#">배송관리</a></li>
+                        </ol>
+                    </li>
+                    
+                    <li>
+                        <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>고객센터</a>
+                        <ol>
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">자주묻는 질문</a></li>
+                            <li><a href="#">문의하기</a></li>
+                        </ol>
+                    </li>
+                </ul>
+            </aside>
+				<section id="admin-faq">
+                <nav>
+                    <h3>자주묻는질문 목록</h3>
+                    <p>
+                        HOME > 고객센터 >
+                        <strong>자주묻는질문</strong>
+                    </p>
+                </nav>
+                <section>
+                    <div>
+                        <select name="search" id="selectBox">
+                            <option value="#">1차 선택</option>
+                            <option value="#">회원</option>
+                            <option value="#">쿠폰/이벤트</option>
+                            <option value="#">주문/결제</option>
+                            <option value="#">배송</option>
+                            <option value="#">취소/반품/교환</option>
+                            <option value="#">여행/숙박/항공</option>
+                            <option value="#">안전거래</option>
+                        </select>
+						<select name="search" id="selectBox2" class="choose">
+                            <option value="search1">2차 선택</option>
+                        </select>
+                    </div>
+                    <table id="tb">
+                        <tr>
+                            <th>
+                            <input type="checkbox" name="all" class="chk">
+                            </th>
+                            <th>번호</th>
+                            <th>1차 유형</th>
+                            <th>2차 유형</th>
+                            <th>제목</th>
+                            <th>조회</th>
+                            <th>날짜</th>
+                            <th>관리</th>
+                        </tr>
+                        
+                        <tr class="row">
+                        	<td><input type="checkbox" name="articleNo" value="${article.no}"></td>
+                            <td>1</td>
+                            <td>회원</td>
+                            <td>회원</td>
+                            <td><a href="#">판매상품</a></td>
+                            <td>1</td>
+                            <td>
+							</td>
+                            <td>
+                                <a href="#" class='remove'>[삭제]</a><br>
+                                <a href="#">[수정]</a>
+                            </td>
+                        </tr>
+                       
+                    </table>
+                    <input type="button" class="delete" value="선택삭제">
+                    <a href="#" class="write" id="write">작성하기</a>
+                    
+					<div class="paging">
+                        <span class="prev">
+                            <a href="#"><&nbsp;이전</a>
+                        </span>
+                        <span class="num">
+                            <a href="#" class="on">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#">6</a>
+                            <a href="#">7</a>
+                        </span>
+                        <span class="next">
+                            <a href="#">다음&nbsp;></a>
+                        </span>
+                    </div>
+                </section>
+            </section>
+        </main>
+        <footer>
+            <div>
+                <p>
+                    Copyright ⓒkmarket.co.kr All rights reserved. KMARKET
+                    ADMINISTRATOR Version 5.4.1.2
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+</body>
+</html>

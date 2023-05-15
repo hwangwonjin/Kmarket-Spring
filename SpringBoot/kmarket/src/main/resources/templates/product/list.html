@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<th:block th:replace="~{product/_header}"/>
+            <section class="list">
+                <nav>
+                    <h1>상품목록</h1>
+                    <p th:if="${cate1 != null}">
+                        HOME > 
+                        <span>[[${ncate.c1Name}]]</span>
+                        > 
+                        <strong th:if="${cate2 != null}">[[${ncate.c2Name}]]</strong>
+                    </p>
+                </nav>
+                <ul class="sort">
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='sold')}">판매많은순</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='lowPrice')}">낮은가격순</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='highPrice')}">높은가격순</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='score')}">평점높은순</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='score')}">후기많은순</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, sort='rdate')}">최근등록순</a>
+                    </li>
+                </ul>
+                <table>
+                    <tr th:each="prod:${prods}">
+                        <td>
+                            <a th:href="@{/product/view (cate1=${prod.cate1}, cate2=${prod.cate2}, prodNo=${prod.prodNo})}" class="thumb">
+                                <img th:src="|@{/}thumb/${prod.cate1}/${prod.cate2}/${prod.thumb1}" alt="상품이미지">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="@{/product/view (cate1=${prod.cate1}, cate2=${prod.cate2}, prodNo=${prod.prodNo})}"><h3 class="name">[[${prod.prodName}]]</h3></a>
+                            <a href="#" class="desc">[[${prod.descript}]]</a>ss
+                        </td>
+                        <td>
+                            <ul>
+                                <li><ins class="dis-price" th:text="${#numbers.formatInteger(prod.sellPrice, 0, 'COMMA')}">20,000</ins></li>
+                                <li>
+                                    <del class="org-price" th:text="${#numbers.formatInteger(prod.price, 0, 'COMMA')}">[[${prod.price}]]</del>
+                                    <span class="discount">[[${prod.discount + "%"}]]</span>
+                                </li>
+                                <li><span class="free-delivery">무료배송</span></li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+                <div class="paging">
+                    <span th:if="${groups[0] > 1}" class="prev">
+                        <a th:href="@{/product/list(cate1=${cate1}, cate2=${cate2}, pg=${groups[0]-1})}">< 이전</a>
+                    </span>
+                    <span class="num">
+                        <th:block th:each="i:${#numbers.sequence(groups[0], groups[1])}">
+                            <a th:href="@{/product/list (cate1=${cate1}, cate2=${cate2}, pg=${i}, sort=${sort})}" th:classappend="${i == currentPage} ? 'on'">[[${i}]]</a>
+                        </th:block>
+                    </span>
+                    <span th:if="${groups[1] < lastPage}" class="next">
+                        <a th:href="@{/product/list(cate1=${cate1}, cate2=${cate2}, pg=${group[0]+1})}">다음 ></a>
+                    </span>
+                </div>
+            </section>
+        </main>
+<th:block th:replace="~{product/_footer}"/>
+</html>

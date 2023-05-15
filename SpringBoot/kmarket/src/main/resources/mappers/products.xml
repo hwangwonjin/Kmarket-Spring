@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.ProductDAO">
+   <!--
+        날짜 : 2023/02/13
+        이름 : 황원진
+   -->
+
+    <!--cate별 상품리스트 조회하기-->
+    <select id="selectProducts" resultType="kr.co.kmarket.vo.ProductVO" parameterType="map">
+        SELECT * FROM `km_product` WHERE `cate1`=#{cate1} AND `cate2`=#{cate2}
+        <choose>
+            <when test="sort == 'sold'"> ORDER BY `sold` DESC LIMIT #{start}, 10;</when>
+            <when test="sort == 'lowPrice'"> ORDER BY `sellPrice` asc LIMIT #{start}, 10;</when>
+            <when test="sort == 'highPrice'"> ORDER BY `sellPrice` DESC LIMIT #{start}, 10;</when>
+            <when test="sort == 'score'"> ORDER BY `score` DESC LIMIT #{start}, 10;</when>
+            <when test="sort == 'review'"> ORDER BY `review` DESC LIMIT #{start}, 10;</when>
+            <when test="sort == 'rdate'"> ORDER BY `rdate` DESC LIMIT #{start}, 10;</when>
+        </choose>
+    </select>
+
+
+    <!--상품번호로 상품 조회하기-->
+    <select id="selectProduct" resultType="kr.co.kmarket.vo.ProductVO">
+        select * from `km_product` where `prodNo`=#{prodNo};
+    </select>
+
+    <!--상품 네비게이션-->
+    <select id="selectNavCate" resultType="kr.co.kmarket.vo.CateVO" parameterType="map">
+        SELECT * FROM `km_product_cate1` AS a JOIN `km_product_cate2` AS b
+        ON a.cate1 = b.cate1 WHERE a.`cate1`=#{cate1} and b.cate2=#{cate2};
+    </select>
+
+    <!--상품 총 개수-->
+    <select id="getTotalCount" resultType="int">
+        select count(`prodNo`) from `km_product` where `cate1`=#{cate1} AND `cate2`=#{cate2};
+    </select>
+
+    <!-- 리뷰 리스트 조회-->
+    <select id="selectReviewListByPaging" resultType="kr.co.kmarket.vo.MyReviewVO">
+        SELECT A.*, B.`prodName` from `km_product_review` AS A
+        JOIN `km_product` AS B
+        ON A.prodNo = B.prodNo
+        WHERE A.`prodNo`=#{prodNo}
+        order by `rdate` desc LIMIT #{start}, 5;
+    </select>
+    <!--리뷰 수 카운팅-->
+    <select id="selectReviewListCount" resultType="int">
+        select count(`prodNo`) from `km_product_review` where `prodNo`=#{prodNo};
+    </select>
+
+
+    <!--장바구니 등록-->
+    <insert id="insertCart">
+        insert into `km_product_cart` set
+                        `prodNo`=#{prodNo},
+                        `uid`=#{seller},
+                        `count`=#{count},
+                        `price`=#{price},
+                        `discount`=#{discount},
+                        `point`=#{point},
+                        `delivery`=#{delivery},
+                        `total`=#{total},
+                        `rdate`=NOW();
+    </insert>
+
+    <!--장바구니 목록-->
+    <select id="selectCart" resultType="kr.co.kmarket.vo.ProductVO">
+        SELECT a.*, b.`cate1`, b.`cate2`,b.`thumb1`, b.`prodName`, b.`descript` FROM `km_product_cart` AS a JOIN
+        `km_product` AS b ON a.`prodNo` = b.`prodNo`
+        WHERE `uid`=#{uid};
+    </select>
+
+    <!--장바구니 전체 가격-->
+    <select id="selectTotalCart" resultType="kr.co.kmarket.vo.ProductVO">
+        SELECT COUNT(`prodNo`) AS COUNT, SUM(`price`) AS price, SUM(`point`) AS POINT, SUM(`delivery`) AS delivery, SUM(`total`) AS total FROM `km_product_cart` WHERE `uid`=#{uid} ;
+    </select>
+
+    <!--장바구니 선택 삭제-->
+    <delete id="deleteCart">
+        delete from `km_product_cart`
+        where `uid`=#{uid} and `prodNo` in
+        <foreach collection="checkList" index="index" item="checkList" open="(" close=")" separator=",">
+            #{checkList}
+        </foreach>
+    </delete>
+
+    <!-- 선택 상품 주문 목록 -->
+    <select id="selectCartOrder" resultType="kr.co.kmarket.vo.ProductVO">
+        SELECT a.*, b.`cate1`, b.`cate2`,b.`thumb1`, b.`prodName`, b.`descript` FROM `km_product_cart` AS a JOIN
+        `km_product` AS b ON a.`prodNo` = b.`prodNo`
+        WHERE `uid`=#{uid} AND b.`prodNo` IN
+        <foreach collection="checkList" index="index" item="checkList" open="(" close=")" separator=",">
+            #{checkList}
+        </foreach>
+    </select>
+
+    <!--뷰에서 주문하기-->
+    <select id="selectOrder" resultType="kr.co.kmarket.vo.ProductVO">
+        SELECT * FROM `km_product` where `prodNo` IN
+        <foreach collection="checkList" index="index" item="checkList" open="(" close=")" separator=",">
+            #{checkList}
+        </foreach>
+    </select>
+
+
+    <!--주문하기 등록-->
+    <insert id="insertComplete" useGeneratedKeys="true" keyProperty="ordNo">
+        insert into `km_product_order` set
+                            `ordNo`=#{ordNo},
+                            `uid`=#{uid},
+                            `ordCount`=#{ordCount},
+                            `ordPrice`=#{ordPrice},
+                            `ordDiscount`=#{ordDiscount},
+                            `ordDelivery`=#{ordDelivery},
+                            `usedPoint`=#{usedPoint},
+                            `ordTotPrice`=#{ordTotPrice},
+                            `recipName`=#{recipName},
+                            `recipHp`=#{recipHp},
+                            `recipZip`=#{recipZip},
+                            `recipAddr1`=#{recipAddr1},
+                            `recipAddr2`=#{recipAddr2},
+                            `ordPayment`=#{ordPayment},
+                            `ordComplete`=2,
+                            `ordDate`=NOW();
+    </insert>
+
+    <!--주문 상품 입력-->
+    <insert id="insertCompleteItem">
+        <!--
+        insert into `km_product_order_item` (`prodNo`, `ordNo`, `uid`, `count`, `price`, `discount`, `point`, `delivery`, `total`, `ordState`, `ordStatus`)
+        select `prodNo`, #{ordNo}, `uid`, `count`, `price`, `discount`, `point`, `delivery`, `total`, "배송중", 2 from `km_product_cart`
+        where `uid`=#{uid} and `prodNo` in
+        <foreach collection="checkList" index="index" item="checkList" open="(" close=")" separator=",">
+            #{checkList}
+        </foreach>
+        -->
+
+        insert into `km_product_order_item`
+        SET
+        `prodNo`=#{prodNo},
+        `ordNo`=#{ordNo},
+        `uid`=#{uid},
+        `count`=#{count},
+        `price`=#{price},
+        `discount`=#{discount},
+        `point`=#{point},
+        `delivery`=#{delivery},
+        `total`=#{total},
+        `ordState`="배송중",
+        `ordStatus`=2;
+
+    </insert>
+
+    <!--장바구니 삭제-->
+    <delete id="deleteCompleteCart">
+        delete from `km_product_cart` where `uid`=#{uid} and `prodNo` in
+        <foreach collection="checkList" index="index" item="checkList" open="(" close=")" separator=",">
+            #{checkList}
+        </foreach>
+    </delete>
+
+</mapper>

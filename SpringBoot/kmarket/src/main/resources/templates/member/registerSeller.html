@@ -1,0 +1,278 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{member/_header}"/>
+<script>
+    var idReg = /^[a-zA-z0-9]{4,12}$/;
+    var pwReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
+    var bizReg = /^[0-9]{3}-[0-9]{2}-[0-9]{5}$/;
+    var emailReg = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+
+    let isUidOk = false;
+    let isPassOk = false;
+    let isBizOk = false;
+    let isEmailOk = false;
+
+    $(function(){
+        $('input[name=uid]').keydown(function(){
+            idUidOk = false;
+        });
+
+        $('input[name=uid]').focusout(function(){
+            let uid = $(this).val();
+
+            if(isUidOk){
+                return;
+            }
+
+            if(!uid.match(idReg)){
+                $('.msgSId').css('color', 'red').text('유효한 아이디가 아닙니다.');
+                isUidOk = false;
+                return;
+            }else{
+                $('.msgSId').css('color', 'green').text('사용가능한 아이디입니다.');
+                isUidOk = true;
+            }
+        });
+
+        // 비밀번호 검사
+        $('input[name=pass2]').focusout(function(){
+            let pass1 = $('input[name=pass]').val();
+            let pass2 = $('input[name=pass2]').val();
+
+            if(pass2.match(pwReg)){
+                if(pass1 == pass2){
+                    isPassOk = true;
+                    $('.msgPass2').css('color', 'green').text('사용하실 수 있는 비밀번호 입니다..');
+                }else{
+                    isPassOk = false;
+                    $('.msgPass2').css('color', 'red').text('비밀번호가 일치하지 않습니다..');
+                }
+            }else{
+                isPassOk = false;
+                $('.msgPass2').css('color', 'red').text('숫자,영문,특수문자 포함 5자리 이상이어야 합니다.');
+            }
+        });
+
+        // 사업자등록번호 검사
+        $('input[name=bizRegNum]').focusout(function(){
+            let biz = $(this).val();
+
+            if(isBizOk){
+                return;
+            }
+
+            if(!biz.match(bizReg)){
+                $('.msgCorp').css('color', 'red').text('양식에 맞게 입력바랍니다.');
+            }else{
+                $('.msgCorp').css('color', 'red').text('사용가능한 사업자등록번호입니다.');
+            }
+        });
+
+        // 이메일 검사
+        $('input[name=email]').focusout(function(){
+            let email = $(this).val();
+
+            if(isEmailOk){
+                return;
+            }
+
+            if(!email.match(emailReg)){
+                $('.msgEmail').css('color', 'red').text('이메일 형식에 맞게 입력바랍니다.');
+            }else{
+                $('.msgEmail').css('color', 'green').text('사용가능한 이메일입니다.');
+            }
+        });
+
+        // 제출시 필수입력사항 체크
+        $('input[type=submit]').click(function(){
+            let pass1 = $('input[name=pass]').val();
+            let pass2 = $('input[name=pass2]').val();
+            let uid = $('input[name=uid]').val();
+            let company = $('input[name=company]').val();
+            let ceo = $('input[name=ceo]').val();
+            let bizRegNum = $('input[name=bizRegNum]').val();
+            let comRegNum = $('input[name=comRegNum]').val();
+            let tel = $('input[name=tel]').val();
+            let fax = $('input[name=fax]').val();
+            let email = $('input[name=email]').val();
+            let manager = $('input[name=manager]').val();
+            let managerHp = $('input[name=managerHp]').val();
+
+            if(uid == "null" || pass1 == "null" || pass2 == "null" || company == "null" || ceo == "null" || bizRegNum == "null" || comRegNum == "null" ||
+                tel == "null" || fax == "null" || email == "null" || manager == "null" || managerHp == "null"){
+                    alert('필수사항을 입력해주세요!');
+                    return;
+                }
+        });
+
+        $('#zipcode').click(function(){
+            zipcode();
+        });
+    });
+</script>
+        <main id="member">
+           <div class="registerSeller">
+            <nav>
+                <h1>판매자 회원가입</h1>
+            </nav>
+            <form th:action="@{/member/registerSeller}" method="post">
+                <section>
+                    <table>
+                        <caption>필수 정보입력</caption>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    아이디
+                                </th>
+                                <td>
+                                    <input type="text" name="uid" placeholder="아이디를 입력" required>
+                                    <span class="msgSId">영문, 숫자로 4~12자까지 설정해 주세요.</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    비밀번호
+                                </th>
+                                <td>
+                                    <input type="password" name="pass" placeholder="비밀번호를 입력" required>
+                                    <span class="msgPass">영문, 숫자, 특수문자를 조합하여 8~12자까지 설정해 주세요.</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    비밀번호확인
+                                </th>
+                                <td>
+                                    <input type="password" name="pass2" placeholder="비밀번호를 입력" required>
+                                    <span class="msgPass2">비밀번호 재입력</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <table>
+                        <caption>기본 정보입력</caption>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    회사명
+                                </th>
+                                <td>
+                                    <input type="text" name="company" placeholder="회사명 입력" required>
+                                    <span class="msgCompany">&nbsp;&nbsp;(주)포함 입력, 예) (주)케이마켓</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    대표자
+                                </th>
+                                <td>
+                                    <input type="text" name="ceo" placeholder="대표자 입력" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    사업자등록번호
+                                </th>
+                                <td>
+                                    <input type="text" name="bizRegNum" placeholder="사업자등록번호 입력" required>
+                                    <span class="msgCorp">&nbsp;&nbsp;- 표시 포함 12자리 입력, 예) 123-45-67890</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    통신판매업신고 번호
+                                </th>
+                                <td>
+                                    <input type="text" name="comRegNum" placeholder="통신판매업신고 입력" required>
+                                    <span class="msgOnline">&nbsp;&nbsp;- 표시 포함, 예) 강남-12345, 제 1-01-23-4567호, 2017-경기성남-0011</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    전화번호
+                                </th>
+                                <td>
+                                    <input type="text" name="tel" placeholder="전화번호 입력" required>
+                                    <span class="msgTel">- 표시 포함, 지역번호 포함, 예) 02-234-1234</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    팩스번호
+                                </th>
+                                <td>
+                                    <input type="text" name="fax" placeholder="팩스번호 입력" required>
+                                    <span class="msgFax">- 표시 포함, 지역번호 포함, 예) 02-234-1234</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    EMAIL
+                                </th>
+                                <td>
+                                    <input type="email" name="email" placeholder="이메일 입력" required>
+                                    <span class="msgEmail"></span>
+                                </td>
+                            </tr>
+                            <tr class="addr">
+                                <th>회사주소</th>
+                                <td>
+                                    <div>
+                                        <input type="text" name="zip" id="zip" placeholder="우편번호 입력 클릭" readonly>
+                                        <input type="button" id="zipcode" value="우편번호 입력"/>
+                                    </div>
+                                    <div>
+                                        <input type="text" name="addr1" id="addr1" size="50" placeholder="주소를 검색하세요." readonly>
+                                    </div>
+                                    <div>
+                                        <input type="text" name="addr2" id="addr2" size="50" placeholder="상세주소를 입력하세요." readonly>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <table>
+                        <caption>담당자 정보입력</caption>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    이름
+                                </th>
+                                <td>
+                                    <input type="text" name="name" placeholder="이름을 입력" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="essential">*</span>
+                                    휴대폰
+                                </th>
+                                <td>
+                                    <input type="text" name="hp" maxlength="13" placeholder="휴대폰번호 입력" required>
+                                    <span class="msgHp">&nbsp;&nbsp;- 포함 13자리를 입력하세요.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <div>
+                    <input type="submit" class="join" value="회원가입">
+                </div>
+            </form>
+           </div>
+        </main>
+<th:block th:replace="~{member/_footer}"/>

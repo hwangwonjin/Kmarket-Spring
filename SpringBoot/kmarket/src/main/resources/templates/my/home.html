@@ -1,0 +1,208 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{my/_header}"/>
+            <div class="home">
+				<ul>
+                    <span class="menu_else"></span>
+                    <li><a th:href="@{/my/ordered}">전체주문내역</a></li>
+                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/point}">포인트내역</a></li>
+                    <li><a th:href="@{/my/coupon}">쿠폰</a></li>
+                    <li><a th:href="@{/my/review}">나의리뷰</a></li>
+                    <li><a th:href="@{/my/qna(pg=1)}">문의하기</a></li>
+                    <li><a th:href="@{/my/info}">나의설정</a></li>
+                </ul>
+
+                <section>
+                    <a href="#"><img th:src="@{/img/my_banner1.jpg}" alt="패션, 타운 하나로 끝" class="banner"></a>
+
+                    <article class="latest">
+                        <h3>최근주문내역</h3>
+                        <a th:href="@{/my/ordered}" class="more">더보기</a>
+                        <table border="0">
+                            <tr>
+                                <th>날짜</th>
+                                <th>상품정보</th>
+                                <th>상태</th>
+                                <th>확인/신청</th>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(orderList)}">
+                                <td class="date">-</td>
+                                <td>주문내역없음</td>
+                                <td class="status">-</td>
+                                <td class="confirm">-</td>
+                            </tr>
+                            <tr th:unless="${#lists.isEmpty(orderList)}" th:each="order:${orderList}">
+                                <td class="date">[[${order.ordDate.substring(0, 10)}]]</td>
+                                <td class="info">
+                                    <a href="#" class="thumb"><img th:src="@{/thumb/{cate1}/{cate2}/{thumb1}(cate1=${order.cate1}, cate2=${order.cate2}, thumb1=${order.thumb1})}" alt=""></a>
+                                    <ul>
+                                        <li class="company"><a href="#">[[${order.company}]]</a></li>
+                                        <li class="prodName" id="prodName"><a href="#">[[${order.prodName}]]</a></li>
+                                        <li class="orderNo">수량 :
+                                            <span class="prodCount">[[${order.count}]]</span>개 / 주문번호 :
+                                            <a href="#">[[${order.ordNo}]]</a>
+                                        </li>
+                                        <li class="prodPrice">[[${order.price}]]</li>
+                                    </ul>
+                                </td>
+                                <th:block th:if="${order.ordStatus == 2}">
+                                    <td class="status">[[${order.ordState}]]</td>
+                                    <td class="confirm">
+                                        <a th:href="@{/my/orderConfirm(ordNo=${order.ordNo}, prodNo=${order.prodNo}, point=${order.point})}" class="receive">수취확인</a>
+                                        <a th:href="@{#}" class="review">상품평</a>
+                                        <input type="hidden" class="prodNo" th:value="${order.prodNo}">
+                                        <a href="#" class="refund">반품신청</a>
+                                        <a href="#" class="exchange">교환신청</a>
+                                    </td>
+                                </th:block>
+                                <th:block th:if="${order.ordStatus == 3}">
+                                    <td class="status">[[${order.ordState}]]</td>
+                                    <td class="confirm">
+                                        <a href="#" class="review">상품평</a>
+                                        <input type="hidden" class="prodNo" th:value="${order.prodNo}">
+                                        <a href="#" class="refund">반품신청</a>
+                                        <a href="#" class="exchange">교환신청</a>
+                                    </td>
+                                </th:block>
+                            </tr>
+                        </table>
+                    </article>
+
+                    <article class="point">
+                        <h3>포인트적립내역</h3>
+                        <a th:href="@{/my/point}" class="more">더보기</a>
+                        <table border="0">
+                            <tr>
+                                <th>날짜</th>
+                                <th>구분</th>
+                                <th>주문번호</th>
+                                <th>적립금액</th>                                
+                                <th>비고</th>
+                                <th>유효기간</th>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pointList)}">
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr th:unless="${#lists.isEmpty(pointList)}" th:each="point:${pointList}">
+                                <td>[[${point.pointDate.substring(0, 10)}]]</td>
+                                <td>적립</td>
+                                <td>[[${point.ordNo}]]</td>
+                                <td>[[${point.point}]]</td>
+                                <td>[[${point.pointdes}]]</td>
+                                <td>[[${point.expireDate.substring(0, 10)}]]</td>
+                            </tr>
+                        </table>
+                    </article>
+                    <article class="review">
+                        <h3>상품평</h3>
+                        <a th:href="@{/my/review}" class="more">더보기</a>
+                        <table border="0">
+                            <tr>
+                                <th>번호</th>
+                                <th>상품명</th>
+                                <th>내용</th>
+                                <th>평점</th>
+                                <th>작성일</th>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reviewList)}">
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr th:unless="${#lists.isEmpty(reviewList)}" th:each="review,i:${reviewList}">
+                                <td>[[${i.count}]]</td>
+                                <td>[[${review.prodName}]]</td>
+                                <td>[[${review.content}]]</td>
+                                <td><span class="rating" th:classappend="star + ${review.rating}">상품평</span></td>
+                                <td>[[${review.rdate.substring(0, 10)}]]</td>
+                            </tr>
+                        </table>
+                    </article>
+
+                    <article class="qna">
+                        <h3>문의내역</h3>
+                        <a th:href="@{/my/qna}" class="more">더보기</a>
+                        <table border="0">
+                            <tr>
+                                <th>번호</th>
+                                <th>문의채널</th>
+                                <th>문의유형</th>                                
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>상태</th>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(csList)}">
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="notAnswerYet">-</span></td>
+                            </tr>
+                            <tr th:unless="${#lists.isEmpty(csList)}" th:each="cs,i:${csList}">
+                                <td>[[${i.count}]]</td>
+                                <td>[[${cs.cate1}]]</td>
+                                <td>[[${cs.type}]]</td>
+                                <td>[[${cs.title}]]</td>
+                                <td>[[${cs.rdate.substring(0, 10)}]]</td>
+                                <td>
+                                    <span class="notAnswerYet" th:if="${cs.comment == null}">검토중</span>
+                                    <span class="answered" th:unless="${cs.comment == null}">답변완료</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </article>
+
+                    <article class="myinfo">
+                        <h3>확인해주세요!</h3>
+
+                        <div>
+                            <div class="address">
+                                <span>기본 배송지설정</span>
+                                <a th:href="@{/my/info}" class="setting">변경</a>
+                                <p th:if="${member?.addr1 == null}">
+                                    <span>배송지 정보가 없습니다.</span>
+                                </p>
+                                <p th:unless="${member?.addr1 == null}">
+                                    <span>[[${member.addr1}]]</span>
+                                    <span>[[${member.addr2}]]</span>
+                                </p>
+                            </div>
+                            <div class="email">
+                                <span>email 설정</span>
+                                <a th:href="@{/my/info}" class="setting">변경</a>
+                                <p>
+                                    <span>[[${member.email}]]</span><br/>
+                                    (최종수정일 <span>[[${member.rdate.substring(0, 10)}]]</span>)
+                                </p>
+                            </div>
+                            <div class="hp">
+                                <span>휴대폰 설정</span>
+                                <a th:href="@{/my/info}" class="setting">변경</a>
+                                <p>
+                                    <span>[[${member.hp}]]</span><br/>
+                                    (최종수정일 <span>[[${member.rdate.substring(0, 10)}]]</span>)
+                                </p>
+                            </div>
+                        </div>
+
+
+                    </article>
+
+                </section>
+            </div>
+            </div>
+<th:block th:replace="~{my/_footer}"/>
+
+
+</html>
+
+

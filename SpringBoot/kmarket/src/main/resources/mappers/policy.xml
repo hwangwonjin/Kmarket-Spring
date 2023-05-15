@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.PolicyDAO">
+
+    <select id="selectPolicies" resultType="kr.co.kmarket.vo.TermsPolicyVO">
+        SELECT * FROM `km_policy_terms`
+        WHERE `cate` = #{cate} AND `chapterNo`=#{chapterNo}
+        ORDER BY `group` ASC;
+    </select>
+    <select id="selectPolicyGroups" resultType="kr.co.kmarket.vo.TermsPolicyVO">
+        SELECT DISTINCT `cate`, `chapter`, `chapterNo`
+            FROM `km_policy_terms`
+            WHERE `cate` = #{cate}
+            order by `chapterNo` ASC;
+    </select>
+    <select id="selectPolicyGroup" resultType="String">
+        SELECT DISTINCT `chapter` FROM `km_policy_terms` WHERE `chapterNo`=#{chapterNo};
+    </select>
+
+</mapper>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8" />
+  <title>케이마켓 고객센터</title>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon.ico}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/cs.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script th:src="@{/js/qnaOption.js}"></script>
+  <script th:src="@{/js/faqSlider.js}"></script>
+</head>
+<body>
+<div id="wrapper">
+  <header>
+    <div class="top">
+      <div sec:authorize="isAuthenticated()">
+        <a th:href="@{/member/logout}">로그아웃</a>
+        <a th:href="@{/member/join}">회원가입</a>
+        <a th:href="@{/my/home}">마이페이지</a>
+        <a th:href="@{/product/cart}">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          장바구니
+        </a>
+      </div>
+      <div sec:authorize="isAnonymous()">
+        <a th:href="@{/member/login}">로그인</a>
+        <a th:href="@{/member/join}">회원가입</a>
+      </div>
+    </div>
+    <div class="logo">
+      <div>
+        <a th:href="@{/cs/index}"><img th:src="@{/img/logo.png}" alt="로고" />고객센터</a>
+      </div>
+    </div>
+  </header>

@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{my/_header}"/>
+            <div class="review">
+                <ul>
+                    <span class="menu_else"></span>
+                    <li><a th:href="@{/my/ordered}">전체주문내역</a></li>
+                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/point}">포인트내역</a></li>
+                    <li><a th:href="@{/my/coupon}">쿠폰</a></li>
+                    <li class="on"><a th:href="@{/my/review}">나의리뷰</a></li>
+                    <li><a th:href="@{/my/qna(pg=1)}">문의하기</a></li>
+                    <li><a th:href="@{/my/info}">나의설정</a></li>
+                </ul>
+
+                <section>
+                    <a href="#"><img th:src="@{/img/my_banner2.png}" alt="패션, 타운 하나로 끝" class="banner"></a>
+                    <article>
+                        <h3>나의리뷰</h3>
+
+                        <table border="0">
+                            <tr>
+                                <th>번호</th>
+                                <th>상품명</th>
+                                <th>내용</th>                                
+                                <th>평점</th>
+                                <th>작성일</th>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reviewList)}">
+                                <td class="no">-</td>
+                                <td class="prodName"><a href="#">-</a></td>
+                                <td class="content">-</td>
+                                <td class="score"><span class="rating star1">-</span></td>
+                                <td class="date">-</td>
+                            </tr>
+                            <tr th:unless="${#lists.isEmpty(reviewList)}" th:each="r, i:${reviewList}">
+                                <td class="no">[[${i.count}]]</td>
+                                <td class="prodName"><a href="#">[[${r.prod.prodName}]]</a></td>
+                                <td class="content">[[${r.content}]]</td>
+                                <td class="score"><span class="rating" th:classappend="star + ${r.rating}">평점</span></td>
+                                <td class="date">[[${r.rdate.substring(0, 10)}]]</td>
+                            </tr>
+                        </table>
+
+                        <p class="page" th:with="start=${start},last=(${start + 4 < page.totalPages ? start + 4 : page.totalPages})">
+                            <th:block th:if="${start > 1}">
+                                <a th:href="@{/my/ordered(page=${start-5}, division=${division}, no=${no})}" class="prev">이전</a>
+                            </th:block>
+                            <th:block th:each="p:${#numbers.sequence(start, last)}">
+                                <a th:href="@{/my/ordered(page=${p}, division=${division}, no=${no})}" class="num" th:classappend="${p == page.number} ? 'on'">[[${p}]]</a>
+                            </th:block>
+                            <th:block th:if="${last < page.totalPages}">
+                                <a th:href="@{/my/ordered(page=${start+5}, division=${division}, no=${no})}" class="next">다음</a>
+                            </th:block>
+                        </p>
+                    </article>
+                </section>
+
+            </div>
+        </div>
+<th:block th:replace="~{my/_footer}"/>
+</html>

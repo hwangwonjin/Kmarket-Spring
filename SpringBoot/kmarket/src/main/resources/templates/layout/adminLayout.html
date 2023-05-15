@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>케이마켓::관리자</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>
+    <script th:src="@{/js/gnb.js}"></script>
+    <script th:src="@{/js/qnaOption.js}"></script>
+    <script th:src="@{/js/checkbox.js}"></script>
+    <script th:src="@{/js/prodDeleteAndModify.js}"></script>
+    <link rel="shortcut icon" type="image/x-icon" th:href='@{/images/favicon.ico}'>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <script th:inline="javascript">
+        function csSearch() {
+
+            let cate1 = [[${cate1}]];
+            let cate2 = $('select[name=cate2]').val();
+            let type = $('select[name=type]').val();
+
+            if (type == null) {
+                location.href = '/kmarket/admin/cs/'+cate1+'/list?cate2='+cate2;
+            } else {
+                location.href = '/kmarket/admin/cs/'+cate1+'/list?cate2='+cate2+'&type='+type;
+            }
+
+        }
+    </script>
+    <!--
+    날짜 : 2023/02/09
+    이름 : 이원정
+    내용 : admin Layout 화면 구현
+
+    - fragment 불러오기
+    th:replace="fragment위치::fragment명"
+    -->
+</head>
+    <body>
+        <div id="admin-wrapper">
+            <!--  헤더 -->
+            <th:block th:replace="fragments/admin/_header::admin_header"></th:block>
+            <main>
+                <!-- aside -->
+                <th:block th:replace="fragments/admin/_aside::admin_aside"></th:block>
+                <!-- 본문 -->
+                <th:block layout:fragment="main"></th:block>
+            </main>
+            <!-- 하단-->
+            <th:block th:replace="fragments/admin/_footer::admin_footer"></th:block>
+        </div>
+    </body>
+<th:block layout:fragment="script">
+    <script>
+
+    </script>
+</th:block>
+</html>

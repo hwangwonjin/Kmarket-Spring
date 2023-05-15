@@ -1,0 +1,145 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{my/_header}"/>
+<script>
+    $(function(){
+        let now = new Date();
+        let one = new Date();
+        let two = new Date();
+        let thr = new Date();
+        let four = new Date();
+
+        let oneMonthAgo = new Date(now.setMonth(now.getMonth() -1)).getMonth()+1;
+        let twoMonthAgo = new Date(one.setMonth(one.getMonth() -2)).getMonth()+1;
+        let threeMonthAgo = new Date(two.setMonth(two.getMonth() -3)).getMonth()+1;
+        let fourMonthAgo = new Date(thr.setMonth(thr.getMonth() -4)).getMonth()+1;
+        let fiveMonthAgo = new Date(four.setMonth(four.getMonth() -5)).getMonth()+1;
+
+        console.log(oneMonthAgo);
+        console.log(twoMonthAgo);
+        console.log(threeMonthAgo);
+        console.log(fourMonthAgo);
+        console.log(fiveMonthAgo);
+
+        $('#one').append(oneMonthAgo);
+        $('#two').append(twoMonthAgo);
+        $('#three').append(threeMonthAgo);
+        $('#four').append(fourMonthAgo);
+        $('#five').append(fiveMonthAgo);
+
+
+    });
+</script>
+    <div class="ordered">
+        <ul>
+            <span class="menu_else"></span>
+            <li class="on"><a th:href="@{/my/ordered}">전체주문내역</a></li>
+            <!--<li><a href="#">관심상품</a></li>-->
+            <li><a th:href="@{/my/point}">포인트내역</a></li>
+            <li><a th:href="@{/my/coupon}">쿠폰</a></li>
+            <li><a th:href="@{/my/review}">나의리뷰</a></li>
+            <li><a th:href="@{/my/qna(pg=1)}">문의하기</a></li>
+            <li><a th:href="@{/my/info}">나의설정</a></li>
+        </ul>
+
+        <section>
+            <a href="#"><img th:src="@{/img/my_banner1.jpg}" alt="패션, 타운 하나로 끝" class="banner"></a>
+            <article>
+                <h3>전체주문내역</h3>
+
+                <div class="byDate">
+                    <span class="tit">기간별조회</span>
+                    <ul class="date_3ea">
+                        <li><a th:href="@{/my/ordered(division=1, no=1)}" th:class="${division == 1 && no == 1}?'on'"><em>1</em>주일</a></li>
+                        <li><a th:href="@{/my/ordered(division=1, no=2)}" th:class="${division == 1 && no == 2}?'on'"><em>15</em>일</a></li>
+                        <li><a th:href="@{/my/ordered(division=1, no=3)}" th:class="${division == 1 && no == 3}?'on'"><em>1</em>개월</a></li>
+                    </ul>
+                    <ul class="date_5ea">
+                        <li><a th:href="@{/my/ordered(division=2, no=5)}" th:class="${division == 2 && no == 5}?'on'"><em id="five"></em>월</a></li>
+                        <li><a th:href="@{/my/ordered(division=2, no=4)}" th:class="${division == 2 && no == 4}?'on'"><em id="four"></em>월</a></li>
+                        <li><a th:href="@{/my/ordered(division=2, no=3)}" th:class="${division == 2 && no == 3}?'on'"><em id="three"></em>월</a></li>
+                        <li><a th:href="@{/my/ordered(division=2, no=2)}" th:class="${division == 2 && no == 2}?'on'"><em id="two"></em>월</a></li>
+                        <li><a th:href="@{/my/ordered(division=2, no=1)}" th:class="${division == 2 && no == 1}?'on'"><em id="one"></em>월</a></li>
+                    </ul>
+                    <form th:action="@{/my/ordered}" method="get">
+                        <input type="hidden" name="division" value="3"/>
+                        <p>
+                            <input type="date" name="begin"><span>~</span><input type="date" name="end">
+                        </p>
+                        <button class="btnConfirm" type="submit">조회하기</button>
+                    </form>
+                </div>
+
+                <table border="0">
+                    <tr>
+                        <th>날짜</th>
+                        <th>상품정보</th>
+                        <th>상태</th>
+                        <th>확인/신청</th>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(orderList)}">
+                        <td class="date">-</td>
+                        <td>
+                            <ul>
+                                <li class="company">-</li>
+                            </ul>
+                        </td>
+                        <td class="status">-</td>
+                        <td class="confirm">
+
+                        </td>
+                    </tr>
+                    <tr th:unless="${#lists.isEmpty(orderList)}" th:each="o:${orderList}">
+                        <th:block th:each="p:${o.orderItem[0]}">
+                            <td class="date">[[${o.ordDate.substring(0, 10)}]]</td>
+                            <td>
+                                <a href="#" class="thumb"><img th:src="@{/thumb/{cate1}/{cate2}/{thumb1}(cate1=${p.prod.cate1}, cate2=${p.prod.cate2}, thumb1=${p.prod.thumb1})}" alt=""></a>
+                                <ul>
+                                    <li class="company">[[${p.prod.company}]]</li>
+                                    <li class="prodName"><a href="#">[[${p.prod.prodName}]]</a></li>
+                                    <li>수량 : <span class="prodCount">[[${o.ordCount}]]</span>개 / 주문번호 : <span class="ordNo">[[${o.ordNo}]]</span></li>
+                                    <li class="prodPrice">[[${o.ordTotPrice}]]</li>
+                                </ul>
+                            </td>
+                            <th:block th:if="${p.ordStatus == 2}">
+                                <td class="status">[[${p.ordState}]]</td>
+                                <td class="confirm">
+                                    <a th:href="@{/my/orderConfirm(ordNo=${o.ordNo}, prodNo=${p.prodNo}, point=${p.point})}" class="receive">수취확인</a>
+                                    <a th:href="@{#}" class="review">상품평</a>
+                                    <a href="#" class="refund">반품신청</a>
+                                    <a href="#" class="exchange">교환신청</a>
+                                </td>
+                            </th:block>
+                            <th:block th:if="${p.ordStatus == 3}">
+                                <td class="status">[[${p.ordState}]]</td>
+                                <td class="confirm">
+                                    <a href="#" class="review">상품평</a>
+                                    <a href="#" class="refund">반품신청</a>
+                                    <a href="#" class="exchange">교환신청</a>
+                                </td>
+                            </th:block>
+                        </th:block>
+                    </tr>
+                </table>
+
+                <p class="page" th:with="start=${start},last=(${start + 4 < page.totalPages ? start + 4 : page.totalPages})">
+                    <th:block th:if="${start > 1}">
+                        <a th:href="@{/my/ordered(page=${start-5}, division=${division}, no=${no})}" class="prev">이전</a>
+                    </th:block>
+                    <th:block th:each="p:${#numbers.sequence(start, last)}">
+                        <a th:href="@{/my/ordered(page=${p}, division=${division}, no=${no})}" class="num" th:classappend="${p == page.number} ? 'on'">[[${p}]]</a>
+                    </th:block>
+                    <th:block th:if="${last < page.totalPages}">
+                        <a th:href="@{/my/ordered(page=${start+5}, division=${division}, no=${no})}" class="next">다음</a>
+                    </th:block>
+                </p>
+
+            </article>
+
+
+
+        </section>
+
+    </div>
+</div>
+<th:block th:replace="~{my/_footer}"/>
+</html>

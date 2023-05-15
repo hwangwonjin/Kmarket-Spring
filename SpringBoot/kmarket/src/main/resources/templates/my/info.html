@@ -1,0 +1,198 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{my/_header}"/>
+<script th:inline="javascript">
+    $(function(){
+        $('.btnFindZip').click(function(){
+            zipcode();
+        });
+
+        $('#btnChangeHp').click(function(){
+            var patternPhone = /01[016789]-[^0][0-9]{3,4}-[0-9]{3,4}/;
+
+            let hp1 = $('input[name=hp1]').val();
+            let hp2 = $('input[name=hp2]').val();
+            let hp3 = $('input[name=hp3]').val();
+
+            let userType = $('input[name=userType]').val();
+            console.log("userType  :" + userType);
+
+            let hp = hp1 + "-" + hp2 + "-" + hp3;
+            console.log(hp);
+
+            let uid = [[${uid}]];
+
+            if(!patternPhone.test(hp)){
+                alert('핸드폰 번호를 확인 해주세요');
+                return;
+            }
+
+            let jsonData = {"hp":hp, "userType":userType, "uid":uid};
+
+            $.ajax({
+                url:'/kmarket/my/modifyHp',
+                method:'POST',
+                data:jsonData,
+                dataType:'json',
+                success:function(data){
+                    if(data.result == 1){
+                        alert("휴대폰 번호가 수정되었습니다.");
+                    }
+                }
+            });
+        });
+
+        $('#btnChangeEmail').click(function(){
+            let email1 = $('input[name=email1]').val();
+            let email2 = "";
+            let option = $('#emailSelect option:selected').val();
+            if(option == "1"){
+                email2 = $('input[name=email2]').val();
+            }else {
+                email2 = option;
+            }
+
+            let email = email1 + "@" + email2;
+            let userType = $('input[name=userType]').val();
+            let uid = [[${uid}]];
+
+            let jsonData = {"email":email, "userType":userType, "uid":uid};
+
+            console.log("email : "+email);
+
+            $.ajax({
+                url:'/kmarket/my/modifyEmail',
+                method:'POST',
+                data:jsonData,
+                dataType:'json',
+                success:function(data){
+                    if(data.result == 1){
+                        alert("이메일이 수정되었습니다.");
+                    }
+                }
+            });
+        });
+
+        $('#btnInfoChange').click(function(){
+            let hp1 = $('input[name=hp1]').val();
+            let hp2 = $('input[name=hp2]').val();
+            let hp3 = $('input[name=hp3]').val();
+            let email1 = $('input[name=email1]').val();
+            let email2 = "";
+            let option = $('#emailSelect option:selected').val();
+            if(option == "1"){
+                email2 = $('input[name=email2]').val();
+            }else {
+                email2 = option;
+            }
+
+            let hp = hp1 + "-" + hp2 + "-" + hp3;
+            let email = email1 + "@" + email2;
+            let zip = $('input[name=zip]').val();
+            let addr1 = $('input[name=addr1]').val();
+            let addr2 = $('input[name=addr2]').val();
+            let userType = $('input[name=userType]').val();
+            let uid = [[${uid}]];
+
+            let jsonData = {"hp":hp, "email":email, "zip":zip, "addr1":addr1, "addr2":addr2, "userType":userType, "uid":uid};
+
+            $.ajax({
+                url:'/kmarket/my/modifyInfo',
+                method:'POST',
+                data:jsonData,
+                dataType:'json',
+                success:function(data){
+                    if(data.result == 1){
+                        alert("회원정보가 수정되었습니다.");
+                    }
+                }
+            });
+        });
+    });
+</script>
+            <div class="info">
+                <ul>
+                    <span class="menu_else"></span>
+                    <li><a th:href="@{/my/ordered}">전체주문내역</a></li>
+                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/point}">포인트내역</a></li>
+                    <li><a th:href="@{/my/coupon}">쿠폰</a></li>
+                    <li><a th:href="@{/my/review}">나의리뷰</a></li>
+                    <li><a th:href="@{/my/qna(pg=1)}">문의하기</a></li>
+
+                    <li class="on"><a th:href="@{/my/info}">나의설정</a></li>
+                </ul>
+
+                <section>
+                    <a href="#"><img th:src="@{/img/my_banner2.png}" alt="패션, 타운 하나로 끝" class="banner"></a>
+                    <article>
+                        <h3>회원정보 설정</h3>
+
+                        <table border="0">
+                            <tr>
+                                <td>사용자 ID</td>
+                                <td>[[${maskingId}]]</td>
+                                <input type="hidden" name="userType" th:value="${userType}"/>
+                            </tr>
+                            <tr>
+                                <td>비밀번호</td>
+                                <td>
+                                    <button id="btnChangePass">비밀번호 수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>이름</td>
+                                <td>[[${member.name}]]</td>
+                            </tr>
+                            <tr>
+                                <td>E-mail</td>
+                                <td>
+                                    <input type="text" name="email1" th:value="${emailId}">@
+                                    <input type="text" name="email2" th:value="${emailDomain}">
+                                    <select id="emailSelect" >
+                                        <option th:value="1">직접입력</option>
+                                        <option th:value="naver.com">naver.com</option>
+                                        <option th:value="daum.net">daum.net</option>
+                                        <option th:value="gmail.com">gmail.com</option>
+                                        <option th:value="nate.com">nate.com</option>
+                                        <option th:value="outlook.com">outlook.com</option>
+                                    </select>
+                                    <button id="btnChangeEmail">수정하기</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>휴대폰</td>
+                                <td>
+                                    <p class="hp">
+                                        <input type="text" name="hp1" th:value="${hp1}"v/>-
+                                        <input type="text" name="hp2" th:value="${hp2}"/>-
+                                        <input type="text" name="hp3" th:value="${hp3}"/>
+                                        <button id="btnChangeHp">수정하기</button>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>주소</td>
+                                <td th:if="${member != null}">
+                                    <input type="text" name="zip" id="zip" th:value="${member.zip}"/>
+                                    <button class="btnFindZip">주소검색</button>
+                                    <p class="address">
+                                        <input type="text" name="addr1" id="addr1" th:value="${member.addr1}"/>
+                                        <input type="text" name="addr2" id="addr2" th:value="${member.addr2}"/>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>회원탈퇴</td>
+                                <td>
+                                    <button id="btnWithdraw">탈퇴하기</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <button id="btnInfoChange">수정하기</button>
+                    </article>
+                </section>
+
+            </div>
+        </div>
+<th:block th:replace="~{my/_footer}"/>
+</html>

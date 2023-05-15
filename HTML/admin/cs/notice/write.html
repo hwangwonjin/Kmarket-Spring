@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>케이마켓::관리자</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://kit.fontawesome.com/20962f3e4b.js" crossorigin="anonymous"></script>    
+    <script src="/Kmarket/admin/js/gnb.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/admin/css/admin.css">
+       <!--
+        날짜 : 2023/02/07
+        이름 : 황원진
+        내용 : admin notice write 화면구현
+        -->
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <div>
+                <a href="#" class="logo">
+                    <img src="/admin/img/admin_logo.png" alt="admin_logo">
+                </a>
+                <p>
+					<span>홍길동님 반갑습니다.</span>
+					<a href="#">HOME |</a>
+					<a href="#">  로그아웃  |</a>
+					<a href="#">고객센터</a>
+                </p>
+            </div>
+        </header>
+        <main>
+            <aside>
+                 <!-- Global Navigation Bar -->
+                <ul id="gnb">
+                    <li>
+                        <a href="#"><i class="fa fa-cogs" aria-hidden="true"></i>환경설정</a>
+                        <ol>
+                            <li><a href="#">기본환경설정</a></li>
+                            <li><a href="#">배너관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-store" aria-hidden="true"></i>상점관리</a>
+                        <ol>
+                            <li><a href="#">판매자현황</a></li>
+                            <li><a href="#">재고관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-users" aria-hidden="true"></i>회원관리</a>
+                        <ol>
+                            <li><a href="#">회원현황</a></li>
+                            <li><a href="#">포인트관리</a></li>
+                            <li><a href="#">비회원관리</a></li>
+                            <li><a href="#">접속자집계</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-box-open" aria-hidden="true"></i>상품관리</a>
+                        <ol>
+                            <li><a href="#">상품현황</a></li>
+                            <li><a href="#">상품등록</a></li>
+                            <li><a href="#">재고관리</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>주문관리</a>
+                        <ol>
+                            <li><a href="#">주문현황</a></li>
+                            <li><a href="#">매출현황</a></li>
+                            <li><a href="#">결제관리</a></li>
+                            <li><a href="#">배송관리</a></li>
+                        </ol>
+                    </li>
+                    
+                    <li>
+                        <a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>고객센터</a>
+                        <ol>
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">자주묻는 질문</a></li>
+                            <li><a href="#">문의하기</a></li>
+                        </ol>
+                    </li>
+                </ul>
+            </aside>
+            <section id="cs">
+            	<div class="faq">
+	                <nav>
+	                    <h3>공지사항 쓰기</h3>
+	                    <p>
+	                        HOME > 고객센터 >
+	                        <strong>공지사항</strong>
+	                    </p>
+	                </nav>
+	                <section class="write">
+						<article>
+	                        <form action="#" method="post">
+	                            <table>
+	                                <tbody>
+	                                    <tr>
+	                                        <td>문의유형</td>
+	                                        <td>
+	                                            <select name="cateType1" id="selectBox">
+	                                                <option value="0">1차 선택</option>
+						                            <option value="회원">회원</option>
+						                            <option value="쿠폰/이벤트">쿠폰/이벤트</option>
+						                            <option value="주문/결제">주문/결제</option>
+						                            <option value="배송">배송</option>
+						                            <option value="취소/반품/교환">취소/반품/교환</option>
+						                            <option value="여행/숙박/항공">여행/숙박/항공</option>
+						                            <option value="안전거래">안전거래</option>
+	                                            </select>
+												<select name="cateType2" id="selectBox2" class="choose">
+	                                                <option value="0">2차 선택</option>
+	                                            </select>
+	                                        </td>
+	                                    </tr>
+	                                    <tr>
+	                                        <td>문의제목</td>
+	                                        <td>
+	                                            <input type="text" name="title" placeholder="제목을 입력하세요.">
+	                                        </td>
+	                                    </tr>
+	                                    <tr>
+	                                        <td>문의내용</td>
+	                                        <td>
+	                                            <textarea name="content" placeholder="내용을 입력하세요."></textarea>
+	                                        </td>
+	                                    </tr>
+	                                </tbody>
+	                            </table>
+	                             <div>
+	                                <a href="#" class="btnList">취소하기</a>
+	                                <input type="submit" class="btnSubmit" value="등록하기">
+	                            </div>
+	                        </form>
+	                    </article>
+	                </section>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div>
+                <p>
+                    Copyright ⓒkmarket.co.kr All rights reserved. KMARKET
+                    ADMINISTRATOR Version 5.4.1.2
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+</body>
+</html>

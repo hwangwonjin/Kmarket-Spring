@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.admin.AdminProdDAO">
+    <!-- 2023/02 이원정 : 관리자 - 상품 - 목록 -->
+    <!-- 쿼리문에 따옴표 항상 주의!! -->
+    <!-- mybatis like문 사용법 https://lollolzkk.tistory.com/44 -->
+
+
+    <!-- 관리자 - 상품 등록 -->
+    <insert id="registerProduct">
+        insert into `km_product` set
+        `cate1`=#{cate1},
+        `cate2`=#{cate2},
+        `seller`=#{seller},
+        `prodName`=#{prodName},
+        `descript`=#{descript},
+        `company`=#{company},
+        `price`=#{price},
+        `discount`=#{discount},
+        `sellPrice`=#{sellPrice},
+        `point`=#{point},
+        `stock`=#{stock},
+        `delivery`=#{delivery},
+        `thumb1`=#{newThumb1},
+        `thumb2`=#{newThumb2},
+        `thumb3`=#{newThumb3},
+        `detail`=#{newDetail},
+        `status`=#{status},
+        `duty`=#{duty},
+        `receipt`=#{receipt},
+        `bizType`=#{bizType},
+        `origin`=#{origin},
+        `ip`=#{ip},
+        `prod_no`=null,
+        `prod_name`=null,
+        `rdate`=NOW();
+    </insert>
+
+    <!--*********************** 판매자 로그인 시  상품 목록 *********************** -->
+    <!-- 1-1 상품 목록 조회 -->
+    <select id="selectProducts" resultType="kr.co.kmarket.vo.ProductVO">
+        select a.*, b.* from `km_product` as a
+        join `km_member_seller` as b on a.`seller`=b.`uid`
+        where `seller`=#{seller} order by `prodNo` desc limit #{start}, 10;
+    </select>
+    <!-- 1-2 상품 목록 조회 (상품명 검색)-->
+    <select id="selectProductsProdName" resultType="kr.co.kmarket.vo.ProductVO">
+        select a.*, b.* from `km_product` as a
+        join `km_member_seller` as b
+        on a.`seller`=b.`uid`
+        where `seller`=#{seller} and `prodName` like '%'+#{prodName}+'%'
+        order by `prodNo` limit #{start}, 10;
+    </select>
+
+    <!-- *********************** 관리자 로그인 시 상품 목록 *********************** -->
+    <!-- 상품 목록 -->
+    <select id="selectProductsAdmin" resultType="kr.co.kmarket.vo.ProductVO">
+        select * from `km_product` as a join
+        `km_member_seller` as b on a.`seller`=b.`uid`
+        order by `prodNo` desc limit #{start}, 10;
+    </select>
+
+    <!-- **************************** 페이징 **************************** -->
+    <!-- 1-1 상품 목록 조회 -->
+    <select id="selectCountProduct" resultType="int">
+        select count(`prodNo`) from `km_product` where `seller`=#{seller};
+    </select>
+    <!-- 1-1 상품 목록 조회 -->
+    <select id="selectProdNo" resultType="kr.co.kmarket.vo.ProductVO">
+        SELECT MAX(`prodNo`) FROM `km_product`;
+    </select>
+
+    <!-- **************************** 상품 삭제 **************************** -->
+    <delete id="deleteProduct">
+        DELETE FROM `km_product` WHERE `prodNo`=#{prodNo};
+    </delete>
+</mapper>

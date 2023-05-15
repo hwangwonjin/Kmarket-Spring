@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kmarket.dao.CsDAO">
+
+    <insert id="insertCsArticle" useGeneratedKeys="true" keyProperty="csNo">
+        INSERT INTO `km_cs` SET
+            `cate1` = #{cate1},
+            `cate2` = #{cate2},
+            `type` = #{type},
+            `title` = #{title},
+            `content` = #{content},
+            `uid` = #{uid},
+            `regip` = #{regip},
+            `rdate` = NOW();
+    </insert>
+
+    <select id="selectCsArticle" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT * FROM `km_cs` WHERE `csNo`=#{csNo};
+    </select>
+
+    <select id="selectCsArticles" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT * FROM `km_cs`
+            WHERE `cate1`=#{cate1} AND `cate2`=#{cate2}
+            ORDER BY `csNo` DESC
+            LIMIT #{start}, 10;
+    </select>
+
+    <select id="selectFaqArticles" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT DISTINCT `cate1`, `cate2`, `type`, `title` FROM `km_cs`
+            WHERE `cate1` = 'faq' AND `cate2` = #{cate2};
+    </select>
+
+    <select id="selectTypeArticles" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT * FROM `km_cs`
+           WHERE `cate1`=#{cate1} AND `cate2`=#{cate2} AND `type`=#{type}
+           ORDER BY `csNo` DESC
+           LIMIT #{start}, 10;
+    </select>
+
+    <select id="selectCsArticlesAll" resultType="kr.co.kmarket.vo.CsVO">
+        SELECT * FROM `km_cs`
+            WHERE `cate1`=#{cate1}
+            ORDER BY `csNo` DESC
+            LIMIT #{start}, 10;
+    </select>
+
+    <delete id="deleteCsArticle">
+        DELETE FROM `km_cs` WHERE `csNo`=#{csNo};
+    </delete>
+
+    <select id="selectCountTotalAll" resultType="long">
+        SELECT COUNT(`csNo`) FROM `km_cs`
+            WHERE `cate1`=#{cate1};
+    </select>
+    <select id="selectCountTotal" resultType="long">
+        SELECT COUNT(`csNo`) FROM `km_cs`
+            WHERE `cate1` = #{cate1} AND `cate2`=#{cate2};
+    </select>
+    <select id="selectCountTotalType" resultType="long">
+        SELECT COUNT(`csNo`) FROM `km_cs`
+            WHERE `cate1` = #{cate1} AND `cate2` = #{cate2} AND `type` = #{type};
+    </select>
+
+    <update id="updateCsArticle">
+        UPDATE `km_cs` SET
+            `cate2` = #{cate2},
+            `type` = #{type},
+            `title` = #{title},
+            `content` = #{content},
+            `rdate` = NOW()
+            WHERE `csNo` = #{csNo};
+    </update>
+
+    <update id="updateCsComment">
+        UPDATE `km_cs` SET
+            `comment` = #{comment}
+        WHERE `csNo` = #{csNo};
+    </update>
+
+</mapper>
